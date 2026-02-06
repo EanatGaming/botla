@@ -1,0 +1,8 @@
+{
+    "host": "scoresmp-zFxf.aternos.me",
+    "port": 20945,
+    "username": "Siam_Bot",
+    "version": "1.20.1",
+    "reconnect_delay": 10000,
+    "movement_interval": 5000
+}
