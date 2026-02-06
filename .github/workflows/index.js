@@ -1,6 +1,10 @@
 const mineflayer = require('mineflayer');
 const config = require('./config.json');
 
+
+process.on('uncaughtException', (err) => console.log('Caught Exception: ' + err));
+process.on('unhandledRejection', (reason, p) => console.log('Unhandled Rejection: ' + reason));
+
 function createBot() {
     const bot = mineflayer.createBot({
         host: config.host,
@@ -8,30 +12,33 @@ function createBot() {
         username: config.username,
         version: config.version,
         hideErrors: true,
-        // মেমোরি বাঁচানোর জন্য নিচের অপশনগুলো জরুরি
-        physicsEnabled: true,
-        viewDistance: 'tiny'
+        viewDistance: 'tiny' য
     });
 
     bot.on('spawn', () => {
-        console.log(`✅ [${bot.username}] সফলভাবে জয়েন করেছে!`);
+        console.log(`✅ [${bot.username}] 
         
-        // প্রতি ৫ সেকেন্ড পর পর জাম্প এবং ছোট মুভমেন্ট
+
         setInterval(() => {
+            console.log("বট এখনো সচল আছে...");
             if (bot.entity) {
                 bot.setControlState('jump', true);
                 setTimeout(() => bot.setControlState('jump', false), 500);
             }
-        }, config.movement_interval);
+        }, 30000);
     });
 
+    // ডিসকানেক্ট হলে ১০ সেকেন্ড পর আবার চেষ্টা করবে
     bot.on('end', () => {
-        console.log("ডিসকানেক্ট হয়েছে। ১০ সেকেন্ড পর রিকানেক্ট করছি...");
-        setTimeout(createBot, config.reconnect_delay);
+        console.log("বট ডিসকানেক্ট হয়েছে। ১০ সেকেন্ড পর রিকানেক্ট হচ্ছে...");
+        setTimeout(createBot, 10000);
     });
 
     bot.on('error', (err) => {
-        console.log('Bot Error:', err.message);
+        console.log('Error Message:', err.message);
+        if (err.message.includes('ECONNREFUSED')) {
+            console.log('সার্ভার অফলাইন অথবা আইপি ভুল!');
+        }
     });
 }
 
