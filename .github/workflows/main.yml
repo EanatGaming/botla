@@ -1,0 +1,25 @@
+name: Minecraft AFK Bot
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '*/15 * * * *' # প্রতি ১৫ মিনিট পর পর চেক করবে বটটি চলছে কি না
+  workflow_dispatch: # এটি দিলে আপনি নিজে হাতে বাটন টিপে বট স্টার্ট করতে পারবেন
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20' # নতুন ভার্সনের জন্য Node 20 ভালো কাজ করে
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Start Bot
+        run: node index.js
